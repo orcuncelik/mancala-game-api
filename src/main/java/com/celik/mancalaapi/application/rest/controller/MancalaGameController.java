@@ -37,13 +37,13 @@ public class MancalaGameController {
     @GetMapping("/{gameId}")
     public ResponseEntity<MancalaGameStateDTO> getGameState(@PathVariable UUID gameId) {
         MancalaGameState gameState = gameService.getGameState(gameId);
-        return ResponseEntity.ok(MancalaGameMapper.mapGameStateToDTO(gameState));
+        return new ResponseEntity<>(MancalaGameMapper.mapGameStateToDTO(gameState), HttpStatus.OK);
     }
 
     @PutMapping("/{gameId}/pits/{pitId}")
     public ResponseEntity<MancalaGameStateDTO> makeMove(@PathVariable UUID gameId, @PathVariable int pitId) {
         gameService.makeMove(gameId, pitId);
         MancalaGameState gameState = gameService.getGameState(gameId);
-        return ResponseEntity.ok(MancalaGameMapper.mapGameStateToDTO(gameState));
+        return new ResponseEntity<>(MancalaGameMapper.mapGameStateToDTO(gameState), HttpStatus.OK);
     }
 }
