@@ -1,10 +1,26 @@
 package com.celik.mancalaapi.domain.model;
 
+import com.celik.mancalaapi.domain.exception.InvalidPitException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class MancalaPitTest {
+    @Test
+    void givenValidPitIndex_whenValidatingPit_thenNoExceptionThrown() {
+        MancalaPit pit = new MancalaPit(0);
+        pit.validatePit(5);
+    }
+
+    @Test
+    void givenInvalidPitIndex_whenValidatingPit_thenInvalidPitExceptionThrown() {
+        MancalaPit pit = new MancalaPit(0);
+        int negativeIndex = -1;
+        int outOfBoundIndex = MancalaBoard.TOTAL_PITS;
+        assertThrows(InvalidPitException.class, () -> pit.validatePit(negativeIndex));
+        assertThrows(InvalidPitException.class, () -> pit.validatePit(outOfBoundIndex));
+    }
 
     @Test
     void givenFirstPlayerRegularPit_whenCreating_thenInitialStonesSetCorrectly() {

@@ -1,17 +1,24 @@
 package com.celik.mancalaapi.domain.model;
 
-import lombok.Data;
+import com.celik.mancalaapi.domain.exception.InvalidPitException;
+import lombok.Getter;
 
 import static com.celik.mancalaapi.domain.model.MancalaBoard.PITS_PER_PLAYER;
 
-@Data
 public class MancalaPit {
-    private int index;
+    private final int index;
+    @Getter
     private int stones;
 
     public MancalaPit(int index) {
+        validatePit(index);
         this.index = index;
         this.stones = getInitialStones();
+    }
+
+    public void validatePit(int index) {
+        if (index >= MancalaBoard.TOTAL_PITS || index < 0)
+            throw new InvalidPitException("Invalid pit index: " + index);
     }
 
     private int getInitialStones() {
@@ -25,5 +32,4 @@ public class MancalaPit {
     public MancalaPlayerType getPlayerType() {
         return index / PITS_PER_PLAYER < 1 ? MancalaPlayerType.FIRST_PLAYER : MancalaPlayerType.SECOND_PLAYER;
     }
-
 }
