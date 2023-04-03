@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 public class MancalaGameState {
     private String gameId;
-    private List<Integer> pits;
+    private List<Integer> player1Pits;
     private int player1BigPit;
     private List<Integer> player2Pits;
     private int player2BigPit;

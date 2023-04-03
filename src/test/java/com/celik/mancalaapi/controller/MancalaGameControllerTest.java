@@ -49,9 +49,9 @@ class MancalaGameControllerTest {
         int pitId = 1;
         String gameId = "1";
 
-        doReturn(gameState)
-                .when(gameService)
-                .makeMove(null,1);
+        //doReturn(gameState)
+        //        .when(gameService)
+        //        .makeMove(null,1);
 
     }
 }
