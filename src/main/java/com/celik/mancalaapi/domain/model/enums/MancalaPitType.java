@@ -1,4 +1,4 @@
-package com.celik.mancalaapi.domain.model;
+package com.celik.mancalaapi.domain.model.enums;
 
 public enum MancalaPitType {
     REGULAR_PIT,
