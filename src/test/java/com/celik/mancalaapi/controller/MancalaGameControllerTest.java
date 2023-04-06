@@ -3,6 +3,8 @@ package com.celik.mancalaapi.controller;
 import com.celik.mancalaapi.application.dto.MancalaGameStateDTO;
 import com.celik.mancalaapi.application.rest.controller.MancalaGameController;
 import com.celik.mancalaapi.domain.model.MancalaGameState;
+import com.celik.mancalaapi.domain.model.enums.MancalaGameStatus;
+import com.celik.mancalaapi.domain.model.enums.MancalaPlayerType;
 import com.celik.mancalaapi.domain.service.MancalaGameService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,8 +32,8 @@ class MancalaGameControllerTest {
 
     @BeforeEach
     void setUp() {
-        gameState = new MancalaGameState("1", Arrays.asList(6, 6, 6, 6, 6, 6), 0, Arrays.asList(6, 6, 6, 6, 6, 6), 0, "player1");
-        gameStateDTO = new MancalaGameStateDTO("1", Arrays.asList(6, 6, 6, 6, 6, 6), 0, Arrays.asList(6, 6, 6, 6, 6, 6), 0, "player1");
+        gameState = new MancalaGameState("1", Arrays.asList(6, 6, 6, 6, 6, 6), 0, Arrays.asList(6, 6, 6, 6, 6, 6), 0, MancalaGameStatus.CONTINUING, MancalaPlayerType.FIRST_PLAYER);
+        gameStateDTO = new MancalaGameStateDTO("1", Arrays.asList(6, 6, 6, 6, 6, 6), 0, Arrays.asList(6, 6, 6, 6, 6, 6), 0, MancalaGameStatus.CONTINUING, MancalaPlayerType.FIRST_PLAYER);
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.celik.mancalaapi.application.rest.controller;
 
+import com.celik.mancalaapi.application.dto.MakeMoveRequestDTO;
 import com.celik.mancalaapi.application.dto.MancalaGameStateDTO;
 import com.celik.mancalaapi.domain.model.MancalaGameState;
 import com.celik.mancalaapi.domain.ports.in.MancalaGameServicePort;
@@ -11,9 +12,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @RestController
@@ -35,15 +39,17 @@ public class MancalaGameController {
     }
 
     @GetMapping("/{gameId}")
-    public ResponseEntity<MancalaGameStateDTO> getGameState(@PathVariable UUID gameId) {
+    public ResponseEntity<MancalaGameStateDTO> getGameState(@PathVariable @NotNull UUID gameId) {
         MancalaGameState gameState = gameService.getGameState(gameId);
         return new ResponseEntity<>(MancalaGameMapper.mapGameStateToDTO(gameState), HttpStatus.OK);
     }
 
-    @PutMapping("/{gameId}/pits/{pitId}")
-    public ResponseEntity<MancalaGameStateDTO> makeMove(@PathVariable UUID gameId, @PathVariable int pitId) {
-        gameService.makeMove(gameId, pitId);
+    @PutMapping("/{gameId}")
+    public ResponseEntity<MancalaGameStateDTO> makeMove(@PathVariable @NotNull UUID gameId,
+                                                        @Valid @RequestBody MakeMoveRequestDTO requestDTO) {
+        gameService.makeMove(gameId, requestDTO.getPitIndex());
         MancalaGameState gameState = gameService.getGameState(gameId);
         return new ResponseEntity<>(MancalaGameMapper.mapGameStateToDTO(gameState), HttpStatus.OK);
     }
+
 }

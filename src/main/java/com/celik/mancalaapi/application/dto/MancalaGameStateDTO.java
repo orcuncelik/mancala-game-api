@@ -1,6 +1,7 @@
 package com.celik.mancalaapi.application.dto;
 
-import com.celik.mancalaapi.domain.model.MancalaBoard;
+import com.celik.mancalaapi.domain.model.enums.MancalaGameStatus;
+import com.celik.mancalaapi.domain.model.enums.MancalaPlayerType;
 import lombok.*;
 
 import java.util.List;
@@ -15,5 +16,6 @@ public class MancalaGameStateDTO {
     private int player1BigPit;
     private List<Integer> player2Pits;
     private int player2BigPit;
-    private String currentPlayer;
+    private MancalaGameStatus gameStatus;
+    private MancalaPlayerType currentPlayer;
 }

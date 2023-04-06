@@ -7,5 +7,5 @@ import java.util.UUID;
 public interface MancalaGameServicePort {
     MancalaGameState createGame();
     MancalaGameState getGameState(UUID gameId);
-    void makeMove(UUID gameId, int pitId);
+    void makeMove(UUID gameId, int pitIndex);
 }

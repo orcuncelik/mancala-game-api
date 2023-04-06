@@ -1,14 +1,15 @@
 package com.celik.mancalaapi.domain.model;
 
+import com.celik.mancalaapi.domain.model.enums.MancalaGameStatus;
+import com.celik.mancalaapi.domain.model.enums.MancalaPlayerType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
-@AllArgsConstructor
-@NoArgsConstructor
+
 @Builder
+@AllArgsConstructor
 @Data
 public class MancalaGameState {
     private String gameId;
@@ -16,10 +17,6 @@ public class MancalaGameState {
     private int player1BigPit;
     private List<Integer> player2Pits;
     private int player2BigPit;
-    private String currentPlayer;
-
-    //public MancalaGameState(MancalaGame game) {
-    //
-    //}
-
+    private MancalaGameStatus gameStatus;
+    private MancalaPlayerType currentPlayer;
 }
