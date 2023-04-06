@@ -11,10 +11,13 @@ import com.celik.mancalaapi.domain.ports.out.MancalaGameRepositoryPort;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class MancalaGameService implements MancalaGameServicePort {
 
     private final ConcurrentHashMap<UUID, MancalaGame> gameCache = new ConcurrentHashMap<>();
+    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
     private final MancalaGameRepositoryPort mancalaGameRepositoryPort;
 
@@ -24,29 +27,44 @@ public class MancalaGameService implements MancalaGameServicePort {
 
     @Override
     public MancalaGameState createGame() {
-        MancalaGame game = new MancalaGame();
-        gameCache.put(game.getId(), game);
-        MancalaGameState gameState = game.toGameState();
-        mancalaGameRepositoryPort.saveGameState(gameState);
-        return gameState;
+        readWriteLock.writeLock().lock();
+        try {
+            MancalaGame game = new MancalaGame();
+            gameCache.put(game.getId(), game);
+            MancalaGameState gameState = game.toGameState();
+            mancalaGameRepositoryPort.saveGameState(gameState);
+            return gameState;
+        } finally {
+            readWriteLock.writeLock().unlock();
+        }
     }
 
     @Override
     public MancalaGameState getGameState(UUID gameId) {
-        return mancalaGameRepositoryPort.findGameStateById(gameId);
+        readWriteLock.readLock().lock();
+        try {
+            return mancalaGameRepositoryPort.findGameStateById(gameId);
+        } finally {
+            readWriteLock.readLock().unlock();
+        }
     }
 
     @Override
     public void makeMove(UUID gameId, int pitIdx) {
-        MancalaGame mancalaGame = gameCache.get(gameId);
-        if (Objects.isNull(mancalaGame))
-            throw new GameNotFoundException("Id: " + gameId.toString() + " of game not found");
-        int serverPitIndex = convertClientPitIndexToServerPitIndex(mancalaGame.getCurrentPlayer(), pitIdx);
-        mancalaGame.makeMove(serverPitIndex);
-        MancalaGameState updatedGameState = mancalaGame.toGameState();
-        mancalaGameRepositoryPort.saveGameState(updatedGameState);
-        if (mancalaGame.isGameFinished())
-            gameCache.remove(gameId);
+        readWriteLock.writeLock().lock();
+        try {
+            MancalaGame mancalaGame = gameCache.get(gameId);
+            if (Objects.isNull(mancalaGame))
+                throw new GameNotFoundException("Id: " + gameId.toString() + " of game not found");
+            int serverPitIndex = convertClientPitIndexToServerPitIndex(mancalaGame.getCurrentPlayer(), pitIdx);
+            mancalaGame.makeMove(serverPitIndex);
+            MancalaGameState updatedGameState = mancalaGame.toGameState();
+            mancalaGameRepositoryPort.saveGameState(updatedGameState);
+            if (mancalaGame.isGameFinished())
+                gameCache.remove(gameId);
+        } finally {
+            readWriteLock.writeLock().unlock();
+        }
     }
 
     private int convertClientPitIndexToServerPitIndex(MancalaPlayerType playerType, int clientIndex) {
