@@ -5,7 +5,7 @@ import com.celik.mancalaapi.domain.exception.GameStateSaveException;
 import com.celik.mancalaapi.domain.model.MancalaGameState;
 import com.celik.mancalaapi.domain.ports.out.MancalaGameRepositoryPort;
 import com.celik.mancalaapi.infrastructure.repository.entity.MancalaGameStateEntity;
-import com.celik.mancalaapi.infrastructure.repository.mapper.MancalaGameMapper;
+import com.celik.mancalaapi.infrastructure.mapper.MancalaGameMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

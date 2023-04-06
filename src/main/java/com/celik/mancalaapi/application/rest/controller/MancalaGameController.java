@@ -4,7 +4,7 @@ import com.celik.mancalaapi.application.dto.MakeMoveRequestDTO;
 import com.celik.mancalaapi.application.dto.MancalaGameStateDTO;
 import com.celik.mancalaapi.domain.model.MancalaGameState;
 import com.celik.mancalaapi.domain.ports.in.MancalaGameServicePort;
-import com.celik.mancalaapi.infrastructure.repository.mapper.MancalaGameMapper;
+import com.celik.mancalaapi.infrastructure.mapper.MancalaGameMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

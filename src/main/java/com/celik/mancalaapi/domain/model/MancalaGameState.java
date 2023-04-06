@@ -7,12 +7,13 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
+import java.util.UUID;
 
 @Builder
 @AllArgsConstructor
 @Data
 public class MancalaGameState {
-    private String gameId;
+    private UUID gameId;
     private List<Integer> player1Pits;
     private int player1BigPit;
     private List<Integer> player2Pits;

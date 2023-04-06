@@ -36,20 +36,24 @@ public class MancalaBoard {
         return MancalaPlayerType.FIRST_PLAYER.equals(playerType) ? REGULAR_PITS_PER_PLAYER : TOTAL_PITS - 1;
     }
 
+    public MancalaPit getPit(int index) {
+        return pits[index];
+    }
+
     public int getBigPitStonesByPlayerType(MancalaPlayerType playerType) {
-        return pits[getBigPitIndexByPlayerType(playerType)].getStones();
+        return getPit(getBigPitIndexByPlayerType(playerType)).getStones();
     }
 
     public void addStones(int index, int stones) {
-        pits[index].addStones(stones);
+        getPit(index).addStones(stones);
     }
 
     public void incrementPitStones(int index) {
-        pits[index].incrementStones();
+        getPit(index).incrementStones();
     }
 
     public int getStones(int index) {
-        return pits[index].getStones();
+        return getPit(index).getStones();
     }
 
     public int getOpponentSideStones(int index) {
@@ -61,15 +65,15 @@ public class MancalaBoard {
     }
 
     public void clearPit(int index) {
-        pits[index].setStones(0);
+        getPit(index).setStones(0);
     }
 
     public MancalaPitType getPitType(int index) {
-        return pits[index].getPitType();
+        return getPit(index).getPitType();
     }
 
     public MancalaPlayerType getPlayerType(int index) {
-        return pits[index].getPlayerType();
+        return getPit(index).getPlayerType();
     }
 
 }

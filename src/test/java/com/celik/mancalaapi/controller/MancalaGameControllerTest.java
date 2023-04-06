@@ -14,6 +14,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
@@ -32,8 +34,8 @@ class MancalaGameControllerTest {
 
     @BeforeEach
     void setUp() {
-        gameState = new MancalaGameState("1", Arrays.asList(6, 6, 6, 6, 6, 6), 0, Arrays.asList(6, 6, 6, 6, 6, 6), 0, MancalaGameStatus.CONTINUING, MancalaPlayerType.FIRST_PLAYER);
-        gameStateDTO = new MancalaGameStateDTO("1", Arrays.asList(6, 6, 6, 6, 6, 6), 0, Arrays.asList(6, 6, 6, 6, 6, 6), 0, MancalaGameStatus.CONTINUING, MancalaPlayerType.FIRST_PLAYER);
+        gameState = new MancalaGameState(UUID.randomUUID(), Arrays.asList(6, 6, 6, 6, 6, 6), 0, Arrays.asList(6, 6, 6, 6, 6, 6), 0, MancalaGameStatus.CONTINUING, MancalaPlayerType.FIRST_PLAYER);
+        gameStateDTO = new MancalaGameStateDTO(UUID.randomUUID(), Arrays.asList(6, 6, 6, 6, 6, 6), 0, Arrays.asList(6, 6, 6, 6, 6, 6), 0, MancalaGameStatus.CONTINUING, MancalaPlayerType.FIRST_PLAYER);
     }
 
     @Test

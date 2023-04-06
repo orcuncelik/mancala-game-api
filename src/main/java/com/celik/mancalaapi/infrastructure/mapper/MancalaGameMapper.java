@@ -1,4 +1,4 @@
-package com.celik.mancalaapi.infrastructure.repository.mapper;
+package com.celik.mancalaapi.infrastructure.mapper;
 
 import com.celik.mancalaapi.application.dto.MancalaGameStateDTO;
 import com.celik.mancalaapi.domain.model.MancalaGameState;
@@ -7,10 +7,10 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.util.Objects;
-import java.util.UUID;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MancalaGameMapper {
+
     public static MancalaGameStateDTO mapGameStateToDTO(MancalaGameState gameState) {
         if (Objects.isNull(gameState)) return null;
         return MancalaGameStateDTO.builder()
@@ -27,7 +27,7 @@ public class MancalaGameMapper {
     public static MancalaGameStateEntity mapGameStateToEntity(MancalaGameState gameState) {
         if (Objects.isNull(gameState)) return null;
         return MancalaGameStateEntity.builder()
-                .gameId(UUID.fromString(gameState.getGameId()))
+                .gameId((gameState.getGameId()))
                 .player1Pits(gameState.getPlayer1Pits())
                 .player2Pits(gameState.getPlayer2Pits())
                 .player1BigPit(gameState.getPlayer1BigPit())
@@ -40,7 +40,7 @@ public class MancalaGameMapper {
     public static MancalaGameState mapEntityToGameState(MancalaGameStateEntity gameStateEntity) {
         if (Objects.isNull(gameStateEntity)) return null;
         return MancalaGameState.builder()
-                .gameId(String.valueOf(gameStateEntity.getGameId()))
+                .gameId(gameStateEntity.getGameId())
                 .player1Pits(gameStateEntity.getPlayer1Pits())
                 .player2Pits(gameStateEntity.getPlayer2Pits())
                 .player1BigPit(gameStateEntity.getPlayer1BigPit())

@@ -27,16 +27,16 @@ public class MancalaPit {
             throw new InvalidPitException("Invalid pit index: " + index);
     }
 
-    private int getInitialStones() {
-        return MancalaPitType.REGULAR_PIT.equals(pitType) ? MancalaBoard.INITIAL_STONES_PER_PIT : 0;
+    public MancalaPlayerType getPlayerType() {
+        return index > REGULAR_PITS_PER_PLAYER ? MancalaPlayerType.SECOND_PLAYER : MancalaPlayerType.FIRST_PLAYER;
     }
 
     public MancalaPitType getPitType() {
         return index % (REGULAR_PITS_PER_PLAYER + 1) == REGULAR_PITS_PER_PLAYER ? MancalaPitType.BIG_PIT : MancalaPitType.REGULAR_PIT;
     }
 
-    public MancalaPlayerType getPlayerType() {
-        return index > REGULAR_PITS_PER_PLAYER ? MancalaPlayerType.SECOND_PLAYER : MancalaPlayerType.FIRST_PLAYER;
+    private int getInitialStones() {
+        return MancalaPitType.REGULAR_PIT.equals(pitType) ? MancalaBoard.INITIAL_STONES_PER_PIT : 0;
     }
 
     public void incrementStones() {

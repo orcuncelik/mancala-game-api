@@ -5,13 +5,13 @@ import com.celik.mancalaapi.domain.model.enums.MancalaPlayerType;
 import lombok.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 @Data
 public class MancalaGameStateDTO {
-    private String gameId;
+    private UUID gameId;
     private List<Integer> player1Pits;
     private int player1BigPit;
     private List<Integer> player2Pits;
