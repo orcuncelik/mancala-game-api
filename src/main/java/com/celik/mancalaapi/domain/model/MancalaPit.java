@@ -10,11 +10,15 @@ import static com.celik.mancalaapi.domain.model.MancalaBoard.REGULAR_PITS_PER_PL
 @Data
 public class MancalaPit {
     private final int index;
+    private final MancalaPlayerType playerType;
+    private final MancalaPitType pitType;
     private int stones;
 
     public MancalaPit(int index) {
         this.index = index;
         validatePit();
+        this.playerType = getPlayerType();
+        this.pitType = getPitType();
         this.stones = getInitialStones();
     }
 
@@ -24,7 +28,7 @@ public class MancalaPit {
     }
 
     private int getInitialStones() {
-        return MancalaPitType.REGULAR_PIT.equals(getPitType()) ? MancalaBoard.INITIAL_STONES_PER_PIT : 0;
+        return MancalaPitType.REGULAR_PIT.equals(pitType) ? MancalaBoard.INITIAL_STONES_PER_PIT : 0;
     }
 
     public MancalaPitType getPitType() {
@@ -32,6 +36,14 @@ public class MancalaPit {
     }
 
     public MancalaPlayerType getPlayerType() {
-        return index / REGULAR_PITS_PER_PLAYER < 1 ? MancalaPlayerType.FIRST_PLAYER : MancalaPlayerType.SECOND_PLAYER;
+        return index > REGULAR_PITS_PER_PLAYER ? MancalaPlayerType.SECOND_PLAYER : MancalaPlayerType.FIRST_PLAYER;
+    }
+
+    public void incrementStones() {
+        stones += 1;
+    }
+
+    public void addStones(int incomingStones) {
+        stones += incomingStones;
     }
 }

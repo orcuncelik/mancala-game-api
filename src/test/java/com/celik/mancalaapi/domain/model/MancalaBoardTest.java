@@ -9,7 +9,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class MancalaBoardTest {
     private MancalaBoard board;
@@ -48,27 +47,52 @@ class MancalaBoardTest {
     }
 
     @Test
-    void givenInitialBoard_whenGetBigPitByPlayerType_thenReturnBigPitCorrectly() {
-        assertEquals(0, board.getBigPitByPlayerType(MancalaPlayerType.FIRST_PLAYER));
-        assertEquals(0, board.getBigPitByPlayerType(MancalaPlayerType.SECOND_PLAYER));
+    void givenInitialBoard_whenGetBigPitIndexByPlayerType_thenReturnBigPitIndexCorrectly() {
+        int player1BigPitIndex = 6;
+        int player2BigPitIndex = 13;
+        assertEquals(player1BigPitIndex, board.getBigPitIndexByPlayerType(MancalaPlayerType.FIRST_PLAYER));
+        assertEquals(player2BigPitIndex, board.getBigPitIndexByPlayerType(MancalaPlayerType.SECOND_PLAYER));
     }
 
     @Test
-    void givenInitialBoard_whenSetStones_thenPitStonesUpdated() {
+    void givenInitialBoard_whenGetBigPitStonesByPlayerType_thenReturnBigPitStonesCorrectly() {
+        int firstPlayerBigPitStones = board.getBigPitStonesByPlayerType(MancalaPlayerType.FIRST_PLAYER);
+        int secondPlayerBigPitStones = board.getBigPitStonesByPlayerType(MancalaPlayerType.SECOND_PLAYER);
+        assertEquals(0, firstPlayerBigPitStones);
+        assertEquals(0, secondPlayerBigPitStones);
+    }
+
+    @Test
+    void givenInitialBoard_whenAddStones_thenPitStonesAddedCorrectly() {
         int index = 4;
-        int newStoneCount = 8;
-        board.setStones(index, newStoneCount);
-        assertEquals(newStoneCount, board.getStones(index));
+        int stonesToAdd = 8;
+        int expectedStoneCount = board.getStones(index) + stonesToAdd;
+        board.addStones(index, stonesToAdd);
+        assertEquals(expectedStoneCount, board.getStones(index));
     }
 
     @Test
-    void givenBoard_whenFirstPlayerTriesToSetStonesInSecondPlayersBigPit_thenThrowsException() {
-        int firstPlayerBigPitIndex = MancalaBoard.REGULAR_PITS_PER_PLAYER;
-        int secondPlayerBigPitIndex = MancalaBoard.TOTAL_PITS - 1;
-        int newStones = 4;
-        // When
-        Throwable exception = assertThrows(InvalidPitException.class, () -> board.setStones(secondPlayerBigPitIndex, newStones));
-        // Then
-        assertEquals("Player cannot set stones in opponent's big pit", exception.getMessage());
+    void givenInitialBoard_whenIncrementPitStones_thenPitStonesIncrementedCorrectly() {
+        int index = 2;
+        int initialStones = board.getStones(index);
+        board.incrementPitStones(index);
+        assertEquals(initialStones + 1, board.getStones(index));
     }
+
+
+    @Test
+    void givenInitialBoard_whenGetOpponentSidePitIndex_thenGetOpponentIndexCorrectly() {
+        int playerIndex = 0;
+        int expectedOpponentSideIndex = 12;
+        assertEquals(expectedOpponentSideIndex, board.getOpponentSidePitIndex(playerIndex));
+    }
+
+    @Test
+    void givenInitialBoard_whenGetOpponentSideStones_thenGetOpponentStonesCorrectly() {
+        int playerIndex = 3;
+        int expectedOpponentStones = 6;
+        assertEquals(expectedOpponentStones, board.getOpponentSideStones(playerIndex));
+    }
+
+
 }
