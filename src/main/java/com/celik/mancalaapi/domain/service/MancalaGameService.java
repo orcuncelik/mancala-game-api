@@ -32,7 +32,7 @@ public class MancalaGameService implements MancalaGameServicePort {
         MancalaGame game = new MancalaGame();
         MancalaGameState gameState = game.toGameState();
         boolean isSaved = storeGameStateInDatabase(gameState);
-        if (!isSaved)
+        if (isSaved)
             gameCache.put(game.getId(), game);
         return gameState;
     }
