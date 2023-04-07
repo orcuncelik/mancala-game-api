@@ -1,4 +1,4 @@
-package com.celik.mancalaapi.domain.exception;
+package com.celik.mancalaapi.infrastructure.exception;
 
 public class GameStateNotFoundException extends RuntimeException {
 

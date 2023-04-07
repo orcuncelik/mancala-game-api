@@ -1,5 +1,6 @@
 package com.celik.mancalaapi.domain.model;
 
+import com.celik.mancalaapi.domain.exception.InvalidPitException;
 import com.celik.mancalaapi.domain.model.enums.MancalaGameStatus;
 import com.celik.mancalaapi.domain.model.enums.MancalaPitType;
 import com.celik.mancalaapi.domain.model.enums.MancalaPlayerType;
@@ -38,10 +39,10 @@ public class MancalaGame {
 
     private void validatePit(int pitIndex) {
         if (!board.getPlayerType(pitIndex).equals(currentPlayer)) {
-            throw new IllegalArgumentException("Selected pit does not belong to the current player.");
+            throw new InvalidPitException("Selected pit does not belong to the current player.");
         }
         if (board.getStones(pitIndex) == 0) {
-            throw new IllegalArgumentException("Selected pit does not have any stones to move. Select again.");
+            throw new InvalidPitException("Cannot select from big pit.");
         }
     }
 

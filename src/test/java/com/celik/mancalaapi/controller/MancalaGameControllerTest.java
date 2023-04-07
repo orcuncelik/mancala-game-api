@@ -15,13 +15,20 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(MancalaGameController.class)
@@ -50,31 +57,50 @@ class MancalaGameControllerTest {
     @Test
     void givenService_whenCreateGame_thenGameCreatedSuccessfully() throws Exception {
         when(gameService.createGame()).thenReturn(gameState);
-        mockMvc.perform(post("/api/mancala")
+        MvcResult mvcResult = mockMvc.perform(post("/api/mancala")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andReturn();
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        gameStateDTO = objectMapper.readValue(responseBody, MancalaGameStateDTO.class);
+        assertEquals(gameState.getGameId(), gameStateDTO.getGameId());
+        assertEquals(gameState.getCurrentPlayer(), gameStateDTO.getCurrentPlayer());
+        verify(gameService, times(1)).createGame();
     }
 
     @Test
     void givenService_whenGetGameState_thenGameStateGot() throws Exception {
-        UUID gameId = UUID.randomUUID();
+        UUID gameId = gameState.getGameId();
         when(gameService.getGameState(gameId)).thenReturn(gameState);
-        mockMvc.perform(get("/api/mancala/" + gameId)
+        MvcResult mvcResult = mockMvc.perform(get("/api/mancala/" + gameId)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andReturn();
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        gameStateDTO = objectMapper.readValue(responseBody, MancalaGameStateDTO.class);
+        assertEquals(gameState.getGameId(), gameStateDTO.getGameId());
+        assertEquals(gameState.getCurrentPlayer(), gameStateDTO.getCurrentPlayer());
+        verify(gameService, times(1)).getGameState(gameId);
     }
 
     @Test
     void givenService_whenMakeMove_thenMakeMoveSuccessful() throws Exception {
         UUID gameId = gameState.getGameId();
-        MakeMoveRequestDTO makeMoveRequestDTO = new MakeMoveRequestDTO(4);
+        MakeMoveRequestDTO makeMoveRequestDTO = new MakeMoveRequestDTO(1);
         when(gameService.getGameState(gameId)).thenReturn(gameState);
         doNothing().when(gameService).makeMove(gameId, makeMoveRequestDTO.getPitIndex());
-        mockMvc.perform(put("/api/mancala/" + gameId)
+        MvcResult mvcResult = mockMvc.perform(put("/api/mancala/" + gameId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("utf-8")
                         .content(objectMapper.writeValueAsString(makeMoveRequestDTO)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andReturn();
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        gameStateDTO = objectMapper.readValue(responseBody, MancalaGameStateDTO.class);
+        assertEquals(gameState.getGameId(), gameStateDTO.getGameId());
+        assertEquals(gameState.getCurrentPlayer(), gameStateDTO.getCurrentPlayer());
+        verify(gameService, times(1)).makeMove(gameId, makeMoveRequestDTO.getPitIndex());
     }
-
 }

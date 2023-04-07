@@ -4,6 +4,7 @@ import com.celik.mancalaapi.domain.exception.GameNotFoundException;
 import com.celik.mancalaapi.domain.model.MancalaGameState;
 import com.celik.mancalaapi.domain.model.enums.MancalaGameStatus;
 import com.celik.mancalaapi.domain.ports.out.MancalaGameRepositoryPort;
+import com.celik.mancalaapi.infrastructure.exception.GameStateSaveException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -32,7 +33,7 @@ class MancalaGameServiceTest {
     }
 
     @Test
-    void givenService_whenCreateGame_thenGameCreatedCorrectly() {
+    void givenService_whenCreateGame_thenGameCreatedCorrectly() throws GameStateSaveException {
         MancalaGameState createdGameState = gameService.createGame();
         assertNotNull(createdGameState);
         assertNotNull(createdGameState.getGameId());
@@ -50,7 +51,7 @@ class MancalaGameServiceTest {
     }
 
     @Test
-    void givenService_whenMakeMove_thenUpdateGameAndSave() {
+    void givenService_whenMakeMove_thenUpdateGameAndSave() throws GameStateSaveException {
         MancalaGameState gameState = gameService.createGame();
         UUID gameId = gameState.getGameId();
         int pitIdx = 0;

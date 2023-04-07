@@ -1,7 +1,7 @@
 package com.celik.mancalaapi.infrastructure.repository;
 
-import com.celik.mancalaapi.domain.exception.GameStateNotFoundException;
-import com.celik.mancalaapi.domain.exception.GameStateSaveException;
+import com.celik.mancalaapi.infrastructure.exception.GameStateNotFoundException;
+import com.celik.mancalaapi.infrastructure.exception.GameStateSaveException;
 import com.celik.mancalaapi.domain.model.MancalaGameState;
 import com.celik.mancalaapi.domain.ports.out.MancalaGameRepositoryPort;
 import com.celik.mancalaapi.infrastructure.repository.entity.MancalaGameStateEntity;
@@ -24,7 +24,7 @@ public class MancalaGameRepositoryAdapter implements MancalaGameRepositoryPort {
     }
 
     @Override
-    public MancalaGameState saveGameState(MancalaGameState gameState) {
+    public MancalaGameState saveGameState(MancalaGameState gameState) throws GameStateSaveException {
         MancalaGameStateEntity gameStateEntity = MancalaGameMapper.mapGameStateToEntity(gameState);
         if (Objects.isNull(gameStateEntity))
             throw new GameStateSaveException("Failed to save game state");
@@ -40,14 +40,9 @@ public class MancalaGameRepositoryAdapter implements MancalaGameRepositoryPort {
     }
 
     @Override
-    public MancalaGameState updateGameState(UUID gameId, MancalaGameState gameState) {
-        if (Objects.isNull(findGameStateById(gameId)))
-            return null;
-        return saveGameState(gameState);
-    }
-
-    @Override
     public void deleteGameStateById(UUID gameId) {
+        if (Objects.isNull(findGameStateById(gameId)))
+            return;
         gameRepository.deleteById(gameId);
     }
 

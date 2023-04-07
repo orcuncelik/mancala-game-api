@@ -1,5 +1,6 @@
 package com.celik.mancalaapi.domain.model;
 
+import com.celik.mancalaapi.domain.exception.InvalidPitException;
 import com.celik.mancalaapi.domain.model.enums.MancalaGameStatus;
 import com.celik.mancalaapi.domain.model.enums.MancalaPlayerType;
 import org.junit.jupiter.api.BeforeEach;
@@ -122,12 +123,14 @@ class MancalaGameTest {
 
 //TODO: Exceptions
     @Test
-    void givenGame_whenPlayerTriesToSetStonesInOpponentPlayersBigPit_thenThrowsException() {
-        int secondPlayerBigPitIndex = MancalaBoard.TOTAL_PITS - 1;
-        int newStones = 4;
-        // When
-        Throwable exception = assertThrows(IllegalArgumentException.class, () -> game.makeMove(secondPlayerBigPitIndex));
-        // Then
-        //assertEquals("Player cannot set stones in opponent's big pit", exception.getMessage());
+    void givenGame_whenPlayerTriesToSetStonesInOpponentPlayersPit_thenThrowsException() {
+        assertEquals(MancalaPlayerType.FIRST_PLAYER, game.getCurrentPlayer());
+        int bigPitIndex = MancalaBoard.REGULAR_PITS_PER_PLAYER;
+        int secondPlayerPitIndex = MancalaBoard.REGULAR_PITS_PER_PLAYER + 1;
+
+        Throwable exception1 = assertThrows(InvalidPitException.class, () -> game.makeMove(bigPitIndex));
+        assertEquals("Cannot select from big pit.", exception1.getMessage());
+        Throwable exception2 = assertThrows(InvalidPitException.class, () -> game.makeMove(secondPlayerPitIndex));
+        assertEquals("Selected pit does not belong to the current player.", exception2.getMessage());
     }
 }

@@ -10,8 +10,8 @@ import javax.validation.constraints.Min;
 @Getter
 public class MakeMoveRequestDTO {
 
-    @Min(value = 0, message = "Pit cannot be negative")
-    @Max(13)
+    @Min(value = 0, message = "Pit index cannot be negative")
+    @Max(value = 5, message = "Pit index cannot be bigger than 5")
     private final int pitIndex;
 
     @JsonCreator
