@@ -1,6 +1,5 @@
 package com.celik.mancalaapi.domain.model;
 
-import com.celik.mancalaapi.domain.exception.InvalidPitException;
 import com.celik.mancalaapi.domain.model.enums.MancalaPlayerType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

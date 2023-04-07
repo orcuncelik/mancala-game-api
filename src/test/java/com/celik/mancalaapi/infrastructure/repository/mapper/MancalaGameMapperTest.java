@@ -8,10 +8,6 @@ import com.celik.mancalaapi.infrastructure.repository.entity.MancalaGameStateEnt
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -42,6 +38,7 @@ class MancalaGameMapperTest {
     @Test
     void testMapGameStateToGameEntity() {
         MancalaGameStateEntity gameStateEntity = MancalaGameMapper.mapGameStateToEntity(gameState);
+        assert gameStateEntity != null;
         assertEquals(gameState.getGameId(), gameStateEntity.getGameId());
         assertEquals(gameState.getPlayer1Pits(), gameStateEntity.getPlayer1Pits());
         assertEquals(gameState.getPlayer2Pits(), gameStateEntity.getPlayer2Pits());
