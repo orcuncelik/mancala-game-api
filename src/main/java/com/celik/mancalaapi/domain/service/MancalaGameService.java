@@ -8,13 +8,10 @@ import com.celik.mancalaapi.domain.model.MancalaGameState;
 import com.celik.mancalaapi.domain.model.enums.MancalaPlayerType;
 import com.celik.mancalaapi.domain.ports.in.MancalaGameServicePort;
 import com.celik.mancalaapi.domain.ports.out.MancalaGameRepositoryPort;
-import com.celik.mancalaapi.infrastructure.exception.GameStateSaveException;
 
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,7 +20,6 @@ public class MancalaGameService implements MancalaGameServicePort {
     private static final Logger logger = Logger.getLogger(MancalaGameService.class.getName());
 
     private final ConcurrentHashMap<UUID, MancalaGame> gameCache = new ConcurrentHashMap<>();
-    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
     private final MancalaGameRepositoryPort mancalaGameRepositoryPort;
 
@@ -33,41 +29,32 @@ public class MancalaGameService implements MancalaGameServicePort {
 
     @Override
     public MancalaGameState createGame() {
-        readWriteLock.writeLock().lock();
-        try {
-            MancalaGame game = new MancalaGame();
-            MancalaGameState gameState = game.toGameState();
-            if (saveGameState(gameState))
-                gameCache.put(game.getId(), game);
-            return gameState;
-        } finally {
-            readWriteLock.writeLock().unlock();
-        }
+        MancalaGame game = new MancalaGame();
+        MancalaGameState gameState = game.toGameState();
+        boolean isSaved = storeGameStateInDatabase(gameState);
+        if (!isSaved)
+            gameCache.put(game.getId(), game);
+        return gameState;
     }
 
     @Override
     public void makeMove(UUID gameId, int pitIdx) {
-        readWriteLock.writeLock().lock();
-        try {
-            MancalaGame game = getGameFromCache(gameId);
-            int serverPitIndex = convertClientPitIndexToServerPitIndex(game.getCurrentPlayer(), pitIdx);
-            game.makeMove(serverPitIndex);
-            MancalaGameState gameState = game.toGameState();
-            saveGameState(gameState);
-            if (game.isGameFinished()) {
-                gameCache.remove(gameId);
-            }
-        } finally {
-            readWriteLock.writeLock().unlock();
+        MancalaGame game = getGameFromCache(gameId);
+        int serverPitIndex = convertClientPitIndexToServerPitIndex(game.getCurrentPlayer(), pitIdx);
+        game.makeMove(serverPitIndex);
+        MancalaGameState gameState = game.toGameState();
+        storeGameStateInDatabase(gameState);
+        if (game.isGameFinished()) {
+            gameCache.remove(gameId);
         }
     }
 
-    private boolean saveGameState(MancalaGameState gameState) {
+    private boolean storeGameStateInDatabase(MancalaGameState gameState) {
         try {
             mancalaGameRepositoryPort.saveGameState(gameState);
             return true;
-        } catch (GameStateSaveException e) {
-            logger.log(Level.SEVERE, "Problem occurred when saving the game: {0}", e.getMessage());
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, "Problem occurred when saving the game: ", ex);
             return false;
         }
     }

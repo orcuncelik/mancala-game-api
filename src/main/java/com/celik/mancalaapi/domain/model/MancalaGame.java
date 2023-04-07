@@ -23,7 +23,7 @@ public class MancalaGame {
         this.currentPlayer = MancalaPlayerType.FIRST_PLAYER;
     }
 
-    public void makeMove(int pitIndex) {
+    public synchronized void makeMove(int pitIndex) {
         validatePit(pitIndex);
         int stones = board.getStones(pitIndex);
         board.clearPit(pitIndex);
