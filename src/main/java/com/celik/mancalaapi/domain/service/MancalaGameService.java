@@ -53,9 +53,7 @@ public class MancalaGameService implements MancalaGameServicePort {
             int serverPitIndex = convertClientPitIndexToServerPitIndex(game.getCurrentPlayer(), pitIdx);
             game.makeMove(serverPitIndex);
             MancalaGameState gameState = game.toGameState();
-            if (!saveGameState(gameState)) {
-                // TODO: synchronize the cache
-            }
+            saveGameState(gameState);
             if (game.isGameFinished()) {
                 gameCache.remove(gameId);
                 mancalaGameRepositoryPort.deleteGameStateById(gameId);
@@ -98,8 +96,10 @@ public class MancalaGameService implements MancalaGameServicePort {
     }
 
     private void validateClientPitIndex(int clientPitIndex) {
-        if (clientPitIndex < 0 || clientPitIndex > 5)
-            throw new InvalidPitException("The pit you've provided is invalid. Choose between 0 and 5");
+        if (clientPitIndex < 0)
+            throw new InvalidPitException("Pit index cannot be negative.");
+        else if (clientPitIndex > 5)
+            throw new InvalidPitException("Pit index cannot be bigger than 5.");
     }
 
 }

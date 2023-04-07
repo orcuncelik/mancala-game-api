@@ -6,13 +6,15 @@ import lombok.Getter;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 @Getter
 public class MakeMoveRequestDTO {
 
-    @Min(value = 0, message = "Pit index cannot be negative")
-    @Max(value = 5, message = "Pit index cannot be bigger than 5")
-    private final int pitIndex;
+    @NotNull
+    @Min(value = 0, message = "Pit index cannot be negative.")
+    @Max(value = 5, message = "Pit index cannot be bigger than 5.")
+    private final Integer pitIndex;
 
     @JsonCreator
     public MakeMoveRequestDTO(@JsonProperty("pitIndex") int pitIndex) {

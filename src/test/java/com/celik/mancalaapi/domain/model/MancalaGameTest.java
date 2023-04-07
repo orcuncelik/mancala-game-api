@@ -121,9 +121,8 @@ class MancalaGameTest {
         assertTrue(game.isGameFinished());
     }
 
-//TODO: Exceptions
     @Test
-    void givenGame_whenPlayerTriesToSetStonesInOpponentPlayersPit_thenThrowsException() {
+    void givenGame_whenPlayerTriesToSetStonesToInvalidPit_thenThrowsException() {
         assertEquals(MancalaPlayerType.FIRST_PLAYER, game.getCurrentPlayer());
         int bigPitIndex = MancalaBoard.REGULAR_PITS_PER_PLAYER;
         int secondPlayerPitIndex = MancalaBoard.REGULAR_PITS_PER_PLAYER + 1;

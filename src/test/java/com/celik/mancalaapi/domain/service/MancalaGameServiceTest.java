@@ -1,21 +1,14 @@
 package com.celik.mancalaapi.domain.service;
 
 import com.celik.mancalaapi.domain.exception.GameNotFoundException;
+import com.celik.mancalaapi.domain.exception.InvalidPitException;
 import com.celik.mancalaapi.domain.model.MancalaGameState;
-import com.celik.mancalaapi.domain.model.enums.MancalaGameStatus;
 import com.celik.mancalaapi.domain.ports.out.MancalaGameRepositoryPort;
 import com.celik.mancalaapi.infrastructure.exception.GameStateSaveException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -66,6 +59,17 @@ class MancalaGameServiceTest {
         int pitIdx = 0;
         when(repositoryPort.findGameStateById(gameId)).thenReturn(null);
         assertThrows(GameNotFoundException.class, () -> gameService.makeMove(gameId, pitIdx));
+    }
+
+    @Test
+    void givenGameService_whenPlayerTriesToSetStonesToIn_thenThrowsException() {
+        int index1 = -5;
+        int index2 = 7;
+        MancalaGameState gameState = gameService.createGame();
+        Throwable exception1 = assertThrows(InvalidPitException.class, () -> gameService.makeMove(gameState.getGameId(), index1));
+        assertEquals("Pit index cannot be negative.", exception1.getMessage());
+        Throwable exception2 = assertThrows(InvalidPitException.class, () -> gameService.makeMove(gameState.getGameId(), index2));
+        assertEquals("Pit index cannot be bigger than 5.", exception2.getMessage());
     }
 
 }
