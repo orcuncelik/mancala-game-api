@@ -56,7 +56,6 @@ public class MancalaGameService implements MancalaGameServicePort {
             saveGameState(gameState);
             if (game.isGameFinished()) {
                 gameCache.remove(gameId);
-                mancalaGameRepositoryPort.deleteGameStateById(gameId);
             }
         } finally {
             readWriteLock.writeLock().unlock();
